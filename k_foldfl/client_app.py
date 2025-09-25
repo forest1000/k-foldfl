@@ -18,7 +18,6 @@ class FlowerClient(NumPyClient):
     def __init__(self, net, trainloader, valloader, testloader, local_epochs, lr, momentum, device):
         """
         Flower Client for federated learning with PyTorch.
-        This client is created for Cifar10.
         Args:
             net(torch.nn.Module): The model to train.
             trainloader(torch.utils.data.DataLoader): DataLoader for the training set.
@@ -37,9 +36,17 @@ class FlowerClient(NumPyClient):
         self.optimizer = optim.Adam(self.net.parameters(), lr=float(lr))
 
     def get_parameters(self, config):
+        """
+        サーバーにモデルパラメータを送信するための関数
+        Traning終了後に実行される
+        """
         return [p.detach().cpu().numpy() for p in self.net.state_dict().values()]
 
     def set_parameters(self, parameters):
+        """
+        グローバルモデルのパラメータを受け取るための関数
+        ラウンドの最初に実行される
+        """
         sd = self.net.state_dict()
         for k, v in zip(sd.keys(), parameters):
             sd[k] = torch.tensor(v, device=self.device)
@@ -97,12 +104,14 @@ class FlowerClient(NumPyClient):
                 all_preds.extend(preds.detach().cpu().tolist())
                 all_labels.extend(y.detach().cpu().tolist())
 
+        # 評価したい指標
         avg_loss = total_loss / max(total, 1)
         accuracy = correct / max(total, 1)
         precision = precision_score(all_labels, all_preds, average="macro", zero_division=0)
         recall    = recall_score(all_labels, all_preds, average="macro", zero_division=0)
         f1        = f1_score(all_labels, all_preds, average="macro", zero_division=0)
         n = len(loader.dataset)
+        # 注意点として、送信する値はPythonの標準の方である必要がある：シリアライズのため
         return float(avg_loss), int(n), {
             "accuracy": float(accuracy),
             "precision": float(precision),
