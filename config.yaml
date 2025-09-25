@@ -1,0 +1,25 @@
+experiment:
+  model: "resnet18"
+  seed: 42
+  k_folds: 2
+  num_clients: 5
+  rounds: 20
+  local_epochs: 3
+  batch_size: 256
+  lr: 0.0001
+  momentum: 0.9
+  dataset_root: data
+  beta: 100       # ← Dirichlet の集中度（小さいほどNon-IIDが強い）
+
+strategy:
+  fraction_fit: 1.0
+  fraction_evaluate: 1.0
+  min_available_clients: 10
+
+resources:
+  client:
+    num_cpus: 2
+    num_gpus: 1
+
+backend:
+  include_dashboard: True
