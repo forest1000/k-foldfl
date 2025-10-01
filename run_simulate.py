@@ -20,8 +20,8 @@ def avg_metrics_across_folds(metrics_list):
     keys = metrics_list[0].keys()
     return {k: float(np.mean([m.get(k, 0.0) for m in metrics_list])) for k in keys}
 
-def main(cfg_path="config.yaml"):
-    base_cfg = args2cfg(load_yaml(cfg_path))
+def main(cfg_path="configs/config.yaml"):
+    base_cfg = args2cfg(load_yaml(cfg_path), args)
     exp = base_cfg["experiment"]
     set_seed(int(exp["seed"]))
     full_ds = load_cifar10(exp["dataset_root"])
