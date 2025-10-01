@@ -3,6 +3,7 @@ import numpy as np
 import csv, datetime
 import flwr as fl
 import torch
+from args_parser import args, args2cfg
 from sklearn.model_selection import KFold
 
 from k_foldfl.client_app import make_client_app
@@ -20,7 +21,7 @@ def avg_metrics_across_folds(metrics_list):
     return {k: float(np.mean([m.get(k, 0.0) for m in metrics_list])) for k in keys}
 
 def main(cfg_path="config.yaml"):
-    base_cfg = load_yaml(cfg_path)
+    base_cfg = args2cfg(load_yaml(cfg_path))
     exp = base_cfg["experiment"]
     set_seed(int(exp["seed"]))
     full_ds = load_cifar10(exp["dataset_root"])

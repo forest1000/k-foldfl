@@ -1,7 +1,7 @@
 experiment:
   model: "resnet18"
   seed: 42
-  k_folds: 2
+  k_folds: 5
   num_clients: 5
   rounds: 10
   local_epochs: 100
@@ -14,7 +14,7 @@ experiment:
 strategy:
   fraction_fit: 1.0
   fraction_evaluate: 1.0
-  min_available_clients: 10
+  min_available_clients: 1
 
 resources:
   client:

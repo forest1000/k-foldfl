@@ -59,7 +59,6 @@ python run_simulation.py
 ```bash
 python -m pip install -U pip wheel setuptools
 pip install "flwr>=1.7,<2.0" torch torchvision numpy pandas scikit-learn
-# GPU 版 PyTorch はご利用の CUDA に合わせて公式コマンドでインストールしてください
 ```
 
 ---
@@ -72,18 +71,19 @@ python run_simulation.py
 
 | 引数 | 既定値 | 説明 |
 |---|---:|---|
-| `--k` | 5 | fold 数（K） |
-| `--fold` | 0 | 実行対象の fold（0..K-1）|
+| `--k` | 5 | fold 数 |
 | `--num_clients` | 5 | クライアント数（擬似分割）|
-| `--rounds` | 5 | 連合学習ラウンド数 |
-| `--epochs` | 1 | 各ラウンドにおけるローカル学習エポック |
-| `--batch_size` | 64 | ローカル学習のバッチサイズ |
-| `--seed` | 42 | 乱数シード（分割・再現性に重要）|
-| `--mode` | `global_kfold` | `global_kfold`：全体でK分割 / `client_kfold`：各クライアント内K分割 |
-| `--out` | `runs/default` | ログ・成果物の保存先 |
+| `--rounds` | 10 | 連合学習ラウンド数 |
+| `--epochs` | 100 | 各ラウンドにおけるローカル学習エポック |
+| `--batch_size` | 256 | ローカル学習のバッチサイズ |
+| `--seed` | 42 | 乱数シード|
+---
+連合学習の設定値
+| `--beta` | 100 | クライアントごとの分布のずれを調整するDirichlet functionのパラメータ（小さいほど非独立同時分布となる） |
+| `--fraction_fit` | 1.0 | 1回のラウンドで参加するクライアントの割合 |
 
 ---
 
-## データセット（CIFAR-10）
-- 既定では `torchvision.datasets.CIFAR10(download=True)` により自動取得
+## データセット
+- CIFAR-10
 
